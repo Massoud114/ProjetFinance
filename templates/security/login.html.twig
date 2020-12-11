@@ -1,37 +1,66 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/site.min.css') }}">
+</head>
 
-{% block title %}Connexion!{% endblock %}
-
-{% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    {% if app.user %}
-        <div class="mb-3">
-            Vous êtes connecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+<body>
+<div class="auth-main">
+    <div class="auth_div">
+        {% for flashError in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+        {% endfor %}
+        {% if app.user %}
+            <div class="mb-3">
+                Vous êtes connecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+            </div>
+        {% endif %}
+        <div class="card">
+            <div class="auth_brand">
+                <a class="navbar-brand" href="javascript:void(0);">Gestion de finances</a>
+            </div>
+            <div class="body">
+                <h1 class="h3 mb-3 font-weight-normal">Merci de vous connecter</h1>
+                <form class="form-auth-small m-t-20" method="post">
+                    <div class="form-group">
+                        <label for="inputUsername" class="control-label sr-only">Nom d'utilisateur</label>
+                        <input type="text" placeholder="Nom d'utilisateur" class="form-control round" value="{{ last_username }}" name="username" id="inputUsername" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword" class="control-label sr-only">Mot de Passe</label>
+                        <input type="password" placeholder="Mot de passe" name="password" id="inputPassword" class="form-control round" required>
+                    </div>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
+                    <div class="form-group clearfix">
+                        <label class="fancy-checkbox element-left">
+                            <input type="checkbox" name="_remember_me">
+                            <span>Se souvenir de moi</span>
+                        </label>
+                    </div>
+                        <button type="submit" class="btn btn-primary btn-round btn-block">Se connecter</button>
+                        <div class="bottom">
+                            <span>Pas de compte ? <a href="{{ path('app_register') }}">Inscription</a></span>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Merci de vous connecter</h1>
-    <label for="inputUsername">Nom d'utilisateur</label>
-    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" required autofocus>
-    <label for="inputPassword">Mot de Passe</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" required>
+        <!-- Latest jQuery -->
+        <script src="{{ asset('vendor/jquery/jquery-3.3.1.min.js') }}"></script>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+        <!-- Bootstrap 4x JS  -->
+        <script src=".{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <!-- Project Common JS -->
+        <script src="{{ asset('assets/js/common.js') }}"></script>
+        <script src="{{ asset('assets/js/index.js') }}"></script>
+    </body>
+</html>
 
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Se souvenir de moi
-            </label>
-        </div>
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Connexion
-    </button>
-</form>
-{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Revenu{% endblock %}
+
+{% block body %}
+    <div class="block-header">
+        <div class="row clearfix">
+            <div class="col-md-6 col-sm-12">
+                <h2>Nouveau Revenu</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-xl-9 col-lg-8 col-md-7">
+                <div class="card">
+                    <div class="header">
+                        <h2>Choisissez la période</h2>
+                    </div>
+                    <div class="body">
+                        {{ form_start(form) }}
+                            <div class="row clearfix">
+                                <div class="col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(form.firstDate) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(form.secondDate) }}
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        <button type="submit" class="btn btn-round btn-primary">Consulter</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

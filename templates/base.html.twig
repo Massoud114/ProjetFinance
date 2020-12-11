@@ -3,16 +3,89 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Bienvenue!{% endblock %}</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/site.min.css') }}">
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
-        {% if app.user %}
-            <h4><a href="{{ path('app_logout') }}">Déconnexion</a></h4>
-        {% else %}
-            <h4><a href="{{ path('app_login') }}">Se connecter</a></h4>
-            <h4><a href="{{ path('app_register') }}">S'inscrire</a></h4>
-        {% endif %}
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+    <body class="theme-blue">
+
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+
+    <div id="wrapper">
+
+        <nav class="navbar navbar-fixed-top">
+            <div class="container-fluid">
+
+                <div class="navbar-left">
+                    <div class="navbar-brand">
+                        <a class="small_menu_btn" href="javascript:void(0);"><i class="fa fa-align-left"></i></a>
+                        <a href="index.html"><span>Gestion des finances</span></a>
+                    </div>
+                </div>
+
+                <div class="navbar-right">
+                    <div id="navbar-menu">
+                        <ul class="nav navbar-nav">
+                            {% if not app.user %}
+                                <li><a href="{{ path('app_login') }}" class="icon-menu">Connexion</a></li>
+                                <li><a href="{{ path('app_register') }}" class="icon-menu">S'inscrire</a></li>
+                            {% else %}
+                                <li><a href="{{ path('app_logout') }}" class="icon-menu">Déconnexion</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="left-sidebar" class="sidebar">
+            <div class="sidebar_list">
+                <div class="tab-content" id="main-menu">
+                    <div class="tab-pane active" id="Home-icon">
+                        <nav class="sidebar-nav sidebar-scroll">
+                            <ul class="metismenu">
+                                {% if app.user %}
+                                    <li class="active"><a><i class="fa fa-user"></i><span>{{ app.user.username }}</span></a></li>
+                                {% endif %}
+                                <li class="header">Revenus</li>
+                                <li class="{% if active is defined and active == "consultation" %} active {% endif %}"><a href="{{ path('revenu_index') }}"><i class="icon-paper-plane"></i><span>Consulter les revenus</span></a></li>
+                                <li class="{% if active is defined and active == "new_consultation" %} active {% endif %}"><a href="{{ path('revenu_new') }}"><i class="icon-bubbles"></i><span>Enregistrer un revenu</span></a></li>
+                                <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-calendar"></i><span>Moyenne revenus mensuels</span></a></li>
+
+                                <li class="header">Dépenses</li>
+                                <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-user"></i><span>Consulter les dépenses</span></a></li>
+                                <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-share"></i><span>Enregistrer une dépense</span></a></li>
+                                <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-microphone"></i><span>Moyenne dépenses mensuelles</span></a></li>
+
+                                <li class="mt-4 {% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-microphone"></i><span>Consulter le solde</span></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-content">
+            {% block body %}
+
+            {% endblock %}
+        </div>
+
+    </div>
+
+    <!-- Javascript -->
+    <!-- Latest jQuery -->
+    <script src="{{ asset('vendor/jquery/jquery-3.3.1.min.js') }}"></script>
+
+    <!-- Bootstrap 4x JS  -->
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Project Common JS -->
+    <script src="{{ asset('assets/js/common.js') }}"></script>
+    <script src="{{ asset('assets/js/index.js') }}"></script>
+    {% block javascripts %}{% endblock %}
     </body>
 </html>
