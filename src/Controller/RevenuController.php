@@ -96,4 +96,16 @@ class RevenuController extends AbstractController
 
         return $this->redirectToRoute('revenu_index');
     }
+
+    /**
+    * @Route("/moy", name="moyenne_revenu", methods={"GET"})
+    * @return Response
+    */
+    public function moyenne (RevenuRepository $repository): Response
+    {
+        return $this->render('revenu/moyenne.html.twig', [
+        	'moyenne' => $repository->getMoyenne(),
+			'active' => 'moyenne_revenu'
+		]);
+    }
 }

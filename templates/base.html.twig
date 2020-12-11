@@ -54,7 +54,7 @@
                                 <li class="header">Revenus</li>
                                 <li class="{% if active is defined and active == "consultation" %} active {% endif %}"><a href="{{ path('revenu_index') }}"><i class="icon-paper-plane"></i><span>Consulter les revenus</span></a></li>
                                 <li class="{% if active is defined and active == "new_consultation" %} active {% endif %}"><a href="{{ path('revenu_new') }}"><i class="icon-bubbles"></i><span>Enregistrer un revenu</span></a></li>
-                                <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-calendar"></i><span>Moyenne revenus mensuels</span></a></li>
+                                <li class="{% if active is defined and active == "moyenne_revenu" %} active {% endif %}"><a href="{{ path('moyenne_revenu') }}"><i class="icon-calendar"></i><span>Moyenne revenus mensuels</span></a></li>
 
                                 <li class="header">Dépenses</li>
                                 <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-user"></i><span>Consulter les dépenses</span></a></li>

@@ -57,4 +57,16 @@ class RevenuRepository extends ServiceEntityRepository
 			->getQuery()
 			->getResult();
 	}
+
+	public function getMoyenne()
+	{
+		$date = new \DateTime();
+		$date->sub(new \DateInterval('P1M'));
+		return $this->createQueryBuilder('r')
+			->select('AVG(r.amount) as moyenne')
+			->where('r.submit_at > :date')
+			->setParameter('date', $date)
+			->getQuery()
+			->getSingleScalarResult();
+	}
 }
