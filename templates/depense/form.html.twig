@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des revenus{% endblock %}
+{% block title %}Liste des dépenses{% endblock %}
 
 {% block body %}
     <div class="block-header">
         <div class="row clearfix">
             <div class="col-md-6 col-sm-12">
-                <h2>Voir la liste des revenus</h2>
+                <h2>Voir la liste des dépenses</h2>
             </div>
         </div>
     </div>
@@ -20,19 +20,19 @@
                     </div>
                     <div class="body">
                         {{ form_start(form) }}
-                            <div class="row clearfix">
-                                <div class="col-lg-3 col-md-3">
-                                    <div class="form-group">
-                                        {{ form_row(form.firstDate) }}
-                                    </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3">
+                                <div class="form-group">
+                                    {{ form_row(form.firstDate) }}
                                 </div>
-                                <div class="col-lg-3 col-md-3">
-                                    <div class="form-group">
-                                        {{ form_row(form.secondDate) }}
-                                    </div>
-                                </div>
-                                <br>
                             </div>
+                            <div class="col-lg-3 col-md-3">
+                                <div class="form-group">
+                                    {{ form_row(form.secondDate) }}
+                                </div>
+                            </div>
+                            <br>
+                        </div>
                         <button type="submit" class="btn btn-round btn-primary">Consulter</button>
                         {{ form_end(form) }}
                     </div>

@@ -69,4 +69,12 @@ class RevenuRepository extends ServiceEntityRepository
 			->getQuery()
 			->getSingleScalarResult();
 	}
+
+	public function getSumOfRevenu()
+	{
+		return $this->createQueryBuilder('r')
+			->select("SUM(r.amount) as totalRevenu")
+			->getQuery()
+			->getSingleScalarResult();
+	}
 }

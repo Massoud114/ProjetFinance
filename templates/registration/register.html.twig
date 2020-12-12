@@ -13,9 +13,6 @@
 <body>
     <div class="auth-main">
         <div class="auth_div">
-            {% for flashError in app.flashes('verify_email_error') %}
-                <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-            {% endfor %}
             <div class="card">
                 <div class="auth_brand">
                     <a class="navbar-brand" href="javascript:void(0);">Gestion de finances</a>

@@ -52,16 +52,16 @@
                                     <li class="active"><a><i class="fa fa-user"></i><span>{{ app.user.username }}</span></a></li>
                                 {% endif %}
                                 <li class="header">Revenus</li>
-                                <li class="{% if active is defined and active == "consultation" %} active {% endif %}"><a href="{{ path('revenu_index') }}"><i class="icon-paper-plane"></i><span>Consulter les revenus</span></a></li>
-                                <li class="{% if active is defined and active == "new_consultation" %} active {% endif %}"><a href="{{ path('revenu_new') }}"><i class="icon-bubbles"></i><span>Enregistrer un revenu</span></a></li>
-                                <li class="{% if active is defined and active == "moyenne_revenu" %} active {% endif %}"><a href="{{ path('moyenne_revenu') }}"><i class="icon-calendar"></i><span>Moyenne revenus mensuels</span></a></li>
+                                <li class="{% if active is defined and active == "consultation" %} active {% endif %}"><a href="{{ path('revenu_index') }}"><i class="fa fa-arrow-down"></i><span>Consulter les revenus</span></a></li>
+                                <li class="{% if active is defined and active == "new_consultation" %} active {% endif %}"><a href="{{ path('revenu_new') }}"><i class="fa fa-plus"></i><span>Enregistrer un revenu</span></a></li>
+                                <li class="{% if active is defined and active == "moyenne_revenu" %} active {% endif %}"><a href="{{ path('moyenne_revenu') }}"><i class="fa fa-sort-amount-desc"></i><span>Moyenne revenus mensuels</span></a></li>
 
                                 <li class="header">Dépenses</li>
-                                <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-user"></i><span>Consulter les dépenses</span></a></li>
-                                <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-share"></i><span>Enregistrer une dépense</span></a></li>
-                                <li class="{% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-microphone"></i><span>Moyenne dépenses mensuelles</span></a></li>
+                                <li class="{% if active is defined and active == "depense" %} active {% endif %}"><a href="{{ path('depense_index') }}"><i class="fa fa-arrow-up"></i><span>Consulter les dépenses</span></a></li>
+                                <li class="{% if active is defined and active == "depense_new" %} active {% endif %}"><a href="{{ path('depense_new') }}"><i class="fa fa-plus"></i><span>Enregistrer une dépense</span></a></li>
+                                <li class="{% if active is defined and active == "moyenne_depense" %} active {% endif %}"><a href="{{ path('moyenne_depense') }}"><i class="fa fa-sort-amount-desc"></i><span>Moyenne dépenses mensuelles</span></a></li>
 
-                                <li class="mt-4 {% if active is defined and active == "" %} active {% endif %}"><a href=""><i class="icon-microphone"></i><span>Consulter le solde</span></a></li>
+                                <li class="mt-4 {% if active is defined and active == "solde" %} active {% endif %}"><a href="{{ path('home') }}"><i class="fa fa-dollar"></i><span>Consulter le solde</span></a></li>
                             </ul>
                         </nav>
                     </div>

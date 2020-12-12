@@ -65,12 +65,8 @@ class RevenuController extends AbstractController
             $entityManager->persist($revenu);
             $entityManager->flush();
 
-            $user = $security->getUser();
-
-            // On met à jour le solde de l'utilisateur
-            $user->setSolde(intval($user->getSolde()) + intval($revenu->getAmount()));
-
-            return $this->redirectToRoute('revenu_index');
+			$this->addFlash("sucess", "Revenu crée");
+			return $this->redirectToRoute('revenu_index');
         }
 
         return $this->render('revenu/new.html.twig', [
@@ -93,7 +89,7 @@ class RevenuController extends AbstractController
             $entityManager->remove($revenu);
             $entityManager->flush();
         }
-
+		$this->addFlash("sucess", "Revenu supprimé");
         return $this->redirectToRoute('revenu_index');
     }
 
