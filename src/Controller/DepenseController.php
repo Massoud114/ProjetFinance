@@ -7,11 +7,13 @@ use App\Entity\OperationSearch;
 use App\Form\DepenseType;
 use App\Form\OperationSearchType;
 use App\Repository\DepenseRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @Route("/depense")
@@ -23,26 +25,18 @@ class DepenseController extends AbstractController
 	 * @Route("/", name="depense_index", methods={"GET"})
 	 * @param DepenseRepository $depenseRepository
 	 * @param Request $request
+	 * @param PaginatorInterface $paginator
+	 * @param Security $security
 	 * @return Response
 	 */
-    public function index(DepenseRepository $depenseRepository, Request $request): Response
+    public function index(DepenseRepository $depenseRepository, Request $request, PaginatorInterface $paginator, Security $security): Response
     {
-		$search = new OperationSearch();
-		$form = $this->createForm(OperationSearchType::class, $search);
-
-		$form->handleRequest($request);
-		if ($form->isSubmitted() && $form->isValid()){
-			if ($search->getFirstDate() == $search->getSecondDate()){
-				$search->setSecondDate($search->getSecondDate()->add(new \DateInterval('P1D')));
-			}
-			return $this->render('depense/index.html.twig', [
-				'depenses' => $depenseRepository->findByPeriod($search),
-				'active' => 'depense'
-			]);
-		}
-
-		return $this->render('depense/form.html.twig', [
-			'form' => $form->createView(),
+    	$depenses = $paginator->paginate(
+    		$depenseRepository->getLatestQuery($security->getUser()),
+			$request->get('page', 1)
+		);
+    	return $this->render('depense/index.html.twig', [
+    		'depenses' => $depenses,
 			'active' => 'depense'
 		]);
     }
@@ -50,20 +44,35 @@ class DepenseController extends AbstractController
 	/**
 	 * @Route("/new", name="depense_new", methods={"GET","POST"})
 	 * @param Request $request
+	 * @param Security $security
 	 * @return Response
 	 */
-    public function new(Request $request): Response
+    public function new(Request $request, Security $security): Response
     {
         $depense = new Depense();
         $form = $this->createForm(DepenseType::class, $depense);
         $form->handleRequest($request);
+		$user = $security->getUser();
+		$depense->setUser($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+        	if ($user->getSolde() < $depense->getAmount()){
+				$this->addFlash("error", "Solde inférieure à la dépense émise");
+				return $this->render('depense/new.html.twig', [
+					'depense' => $depense,
+					'form' => $form->createView(),
+					'active' => 'depense_new'
+				]);
+			}
+
+        	$user->setSolde(intval($user->getSolde() - $depense->getAmount()));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($depense);
             $entityManager->flush();
 
-			$this->addFlash("sucess", "Dépense enregistrée");
+			$this->addFlash("success", "Dépense enregistrée");
             return $this->redirectToRoute('depense_index');
 		}
 
@@ -90,17 +99,4 @@ class DepenseController extends AbstractController
 
         return $this->redirectToRoute('depense_index');
     }
-
-	/**
-	 * @Route("/moy", name="moyenne_depense", methods={"GET"})
-	 * @param DepenseRepository $repository
-	 * @return Response
-	 */
-	public function moyenne (DepenseRepository $repository): Response
-	{
-		return $this->render('depense/moyenne.html.twig', [
-			'moyenne' => $repository->getMoyenne(),
-			'active' => 'moyenne_depense'
-		]);
-	}
 }

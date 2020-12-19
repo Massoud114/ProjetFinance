@@ -4,8 +4,12 @@ namespace App\Repository;
 
 use App\Entity\Depense;
 use App\Entity\OperationSearch;
+use DateInterval;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Depense|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,63 +24,20 @@ class DepenseRepository extends ServiceEntityRepository
         parent::__construct($registry, Depense::class);
     }
 
-    // /**
-    //  * @return Depense[] Returns an array of Depense objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Depense
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
-
-	public function findByPeriod(OperationSearch $search)
+	/**
+	 * @param UserInterface $user
+	 * @return Query Returns a query of depenses related to a user
+	 */
+	public function getLatestQuery(UserInterface $user)
 	{
+		$week = new DateTime('today');
+		$week->sub(new DateInterval('P7D'));
 		return $this->createQueryBuilder('d')
-			->where('d.submit_at BETWEEN :period1 AND :period2')
-			->setParameter('period1', $search->getFirstDate())
-			->setParameter('period2', $search->getSecondDate())
-			->getQuery()
-			->getResult();
+			->where('d.User = :user')
+			->andWhere('d.submit_at > :week')
+			->setParameter('user', $user)
+			->setParameter('week', $week)
+			->getQuery();
 	}
 
-	public function getMoyenne()
-	{
-		$date = new \DateTime();
-		$date->sub(new \DateInterval('P1M'));
-		return $this->createQueryBuilder('d')
-			->select('AVG(d.amount) as moyenne')
-			->where('d.submit_at > :date')
-			->setParameter('date', $date)
-			->getQuery()
-			->getSingleScalarResult();
-	}
-
-	public function getSumOfDepense()
-	{
-		return $this->createQueryBuilder('d')
-			->select("SUM(d.amount) as totalDepense")
-			->getQuery()
-			->getSingleScalarResult();
-	}
 }

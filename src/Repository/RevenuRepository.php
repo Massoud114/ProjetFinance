@@ -2,10 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\OperationSearch;
 use App\Entity\Revenu;
+use DateInterval;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Revenu|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,58 +26,21 @@ class RevenuRepository extends ServiceEntityRepository
     // /**
     //  * @return Revenu[] Returns an array of Revenu objects
     //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Revenu
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-	public function findByPeriod(OperationSearch $search)
+	/**
+	 * @param UserInterface $user
+	 * @return Query Return the query for latest revenu related to a user
+	 */
+	public function getLatestQuery(UserInterface $user)
 	{
+		$week = new DateTime('today');
+		$week->sub(new DateInterval('P7D'));
 		return $this->createQueryBuilder('r')
-			->where('r.submit_at BETWEEN :period1 AND :period2')
-			->setParameter('period1', $search->getFirstDate())
-			->setParameter('period2', $search->getSecondDate())
-			->getQuery()
-			->getResult();
-	}
+			->where('r.User = :user')
+			->andWhere('r.submit_at > :week')
+			->setParameter('user', $user)
+			->setParameter('week', $week)
+			->getQuery();
 
-	public function getMoyenne()
-	{
-		$date = new \DateTime();
-		$date->sub(new \DateInterval('P1M'));
-		return $this->createQueryBuilder('r')
-			->select('AVG(r.amount) as moyenne')
-			->where('r.submit_at > :date')
-			->setParameter('date', $date)
-			->getQuery()
-			->getSingleScalarResult();
-	}
-
-	public function getSumOfRevenu()
-	{
-		return $this->createQueryBuilder('r')
-			->select("SUM(r.amount) as totalRevenu")
-			->getQuery()
-			->getSingleScalarResult();
 	}
 }

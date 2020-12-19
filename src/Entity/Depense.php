@@ -32,6 +32,12 @@ class Depense
      */
     private $libelle;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="depenses")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $User;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +75,18 @@ class Depense
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): self
+    {
+        $this->User = $User;
 
         return $this;
     }

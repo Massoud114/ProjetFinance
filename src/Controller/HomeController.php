@@ -20,11 +20,8 @@ class HomeController extends AbstractController
 	 */
     public function index(DepenseRepository $depenseRepository, RevenuRepository $revenuRepository)
     {
-    	$sumRevenu = intval($revenuRepository->getSumOfRevenu());
-    	$sumDepense = intval($depenseRepository->getSumOfDepense());
         return $this->render('home/index.html.twig', [
             'active' => 'solde',
-			'solde' => ceil($sumRevenu - $sumDepense)
         ]);
     }
 }

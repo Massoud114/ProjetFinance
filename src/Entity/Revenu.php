@@ -34,15 +34,21 @@ class Revenu
      */
     private $amount;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="revenus")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $User;
+
     public function __construct()
 	{
 		$this->submit_at = new \DateTime("now");
 	}
 
 	public function getId(): ?int
-    {
-        return $this->id;
-    }
+             {
+                 return $this->id;
+             }
 
     public function getSubmitAt(): ?\DateTimeInterface
     {
@@ -76,6 +82,18 @@ class Revenu
     public function setAmount(string $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): self
+    {
+        $this->User = $User;
 
         return $this;
     }

@@ -34,6 +34,7 @@
                                 <li><a href="{{ path('app_login') }}" class="icon-menu">Connexion</a></li>
                                 <li><a href="{{ path('app_register') }}" class="icon-menu">S'inscrire</a></li>
                             {% else %}
+                                <li class="active"><a disabled style="cursor:default;" class="icon-menu active">Solde : {{ app.user.solde }} FCFA</a></li>
                                 <li><a href="{{ path('app_logout') }}" class="icon-menu">Déconnexion</a></li>
                             {% endif %}
                         </ul>
@@ -54,12 +55,10 @@
                                 <li class="header">Revenus</li>
                                 <li class="{% if active is defined and active == "consultation" %} active {% endif %}"><a href="{{ path('revenu_index') }}"><i class="fa fa-arrow-down"></i><span>Consulter les revenus</span></a></li>
                                 <li class="{% if active is defined and active == "new_consultation" %} active {% endif %}"><a href="{{ path('revenu_new') }}"><i class="fa fa-plus"></i><span>Enregistrer un revenu</span></a></li>
-                                <li class="{% if active is defined and active == "moyenne_revenu" %} active {% endif %}"><a href="{{ path('moyenne_revenu') }}"><i class="fa fa-sort-amount-desc"></i><span>Moyenne revenus mensuels</span></a></li>
 
                                 <li class="header">Dépenses</li>
                                 <li class="{% if active is defined and active == "depense" %} active {% endif %}"><a href="{{ path('depense_index') }}"><i class="fa fa-arrow-up"></i><span>Consulter les dépenses</span></a></li>
                                 <li class="{% if active is defined and active == "depense_new" %} active {% endif %}"><a href="{{ path('depense_new') }}"><i class="fa fa-plus"></i><span>Enregistrer une dépense</span></a></li>
-                                <li class="{% if active is defined and active == "moyenne_depense" %} active {% endif %}"><a href="{{ path('moyenne_depense') }}"><i class="fa fa-sort-amount-desc"></i><span>Moyenne dépenses mensuelles</span></a></li>
 
                                 <li class="mt-4 {% if active is defined and active == "solde" %} active {% endif %}"><a href="{{ path('home') }}"><i class="fa fa-dollar"></i><span>Consulter le solde</span></a></li>
                             </ul>

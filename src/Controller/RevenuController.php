@@ -7,6 +7,8 @@ use App\Entity\Revenu;
 use App\Form\OperationSearchType;
 use App\Form\RevenuType;
 use App\Repository\RevenuRepository;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,27 +25,20 @@ class RevenuController extends AbstractController
 	/**
 	 * @Route("/", name="revenu_index", methods={"GET"})
 	 * @param RevenuRepository $revenuRepository
+	 * @param Security $security
+	 * @param PaginatorInterface $paginator
 	 * @param Request $request
 	 * @return Response
 	 */
-    public function index(RevenuRepository $revenuRepository, Request $request): Response
+    public function index(RevenuRepository $revenuRepository, Security $security, PaginatorInterface $paginator, Request $request):
+	Response
     {
-		$search = new OperationSearch();
-		$form = $this->createForm(OperationSearchType::class, $search);
-
-		$form->handleRequest($request);
-		if ($form->isSubmitted() && $form->isValid()){
-			if ($search->getFirstDate() == $search->getSecondDate()){
-				$search->setSecondDate($search->getSecondDate()->add(new \DateInterval('P1D')));
-			}
-			return $this->render('revenu/index.html.twig', [
-				'revenus' => $revenuRepository->findByPeriod($search),
-				'active' => 'consultation'
-			]);
-		}
-
-		return $this->render('revenu/form.html.twig', [
-			'form' => $form->createView(),
+    	$revenus = $paginator->paginate(
+    		$revenuRepository->getLatestQuery($security->getUser()),
+			$request->get('page', 1)
+		);
+    	return $this->render('revenu/index.html.twig', [
+    		'revenus' => $revenus,
 			'active' => 'consultation'
 		]);
     }
@@ -59,13 +54,16 @@ class RevenuController extends AbstractController
         $revenu = new Revenu();
         $form = $this->createForm(RevenuType::class, $revenu);
         $form->handleRequest($request);
+		$user = $security->getUser();
+		$revenu->setUser($user);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+		if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $user->setSolde(intval($user->getSolde() + $revenu->getAmount()));
             $entityManager->persist($revenu);
             $entityManager->flush();
 
-			$this->addFlash("sucess", "Revenu crée");
+			$this->addFlash("success", "Revenu crée");
 			return $this->redirectToRoute('revenu_index');
         }
 
@@ -89,19 +87,7 @@ class RevenuController extends AbstractController
             $entityManager->remove($revenu);
             $entityManager->flush();
         }
-		$this->addFlash("sucess", "Revenu supprimé");
+		$this->addFlash("success", "Revenu supprimé");
         return $this->redirectToRoute('revenu_index');
-    }
-
-    /**
-    * @Route("/moy", name="moyenne_revenu", methods={"GET"})
-    * @return Response
-    */
-    public function moyenne (RevenuRepository $repository): Response
-    {
-        return $this->render('revenu/moyenne.html.twig', [
-        	'moyenne' => $repository->getMoyenne(),
-			'active' => 'moyenne_revenu'
-		]);
     }
 }
